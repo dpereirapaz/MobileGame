@@ -1,0 +1,63 @@
+/* Synapse Design System — from DESIGN.md */
+
+:root {
+  /* Core palette */
+  --bg:         #0F0E0A;
+  --surface:    #1C1A13;
+  --surface2:   #252218;
+  --grid-line:  #2E2B1F;
+  --text:       #E8E0C8;
+  --text-muted: #9A9178;
+  --text-dim:   #5C5843;
+  --accent:     #C8F060;
+  --accent-dim: #8AAA3A;
+
+  /* Semantic */
+  --success: #7BAE7F;
+  --warning: #C4956A;
+  --error:   #C46A6A;
+  --info:    #4A9EBF;
+
+  /* Neuron type colors (tier → type) */
+  --n-language:   #4A9EBF;  /* Tier 1 — Perceptron */
+  --n-vision:     #7BAE7F;  /* Tier 2 — Linear Layer */
+  --n-reasoning:  #C4956A;  /* Tier 3 — Hidden Layer */
+  --n-memory:     #7C4FA8;  /* Tier 4 — Attention Head */
+  --n-planning:   #5C8A8A;  /* Tier 5 — Transformer Block */
+  --n-creativity: #D4875A;  /* Tier 6 — Foundation Model */
+  /* Tier 7 (AGI) uses --accent */
+
+  /* Typography */
+  --font-display:    'Instrument Serif', serif;
+  --font-mono-tier:  'JetBrains Mono', monospace;
+  --font-ui:         'Geist', sans-serif;
+  --font-score:      'DM Mono', monospace;
+
+  /* Spacing (8px base) */
+  --sp-2xs: 2px;
+  --sp-xs:  4px;
+  --sp-sm:  8px;
+  --sp-md:  16px;
+  --sp-lg:  24px;
+  --sp-xl:  32px;
+  --sp-2xl: 48px;
+  --sp-3xl: 64px;
+
+  /* Border radius */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-full: 9999px;
+
+  /* Grid dimensions */
+  --cell-size:   44px;
+  --neuron-size: 36px;
+  --grid-width:  352px;  /* 8 × 44px */
+
+  /* Animation durations */
+  --dur-micro:  75ms;
+  --dur-short:  150ms;
+  --dur-medium: 300ms;
+  --dur-long:   500ms;
+  --dur-merge:  1200ms;
+}

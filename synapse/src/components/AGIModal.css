@@ -1,0 +1,99 @@
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);   }
+}
+
+.agi-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 14, 10, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-md);
+  z-index: 100;
+}
+
+.agi-modal {
+  background: var(--surface);
+  border: 1px solid var(--grid-line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-2xl) var(--sp-xl);
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-sm);
+  animation: modalEnter 300ms ease-out both;
+}
+
+.agi-modal__eyebrow {
+  font-family: var(--font-mono-tier);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.agi-modal__tag {
+  font-family: var(--font-mono-tier);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-top: var(--sp-xs);
+}
+
+.agi-modal__title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text);
+  margin: var(--sp-xs) 0 0;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.agi-modal__compute {
+  font-family: var(--font-score);
+  font-size: 48px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  line-height: 1;
+  margin-top: var(--sp-sm);
+}
+
+.agi-modal__record {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.agi-modal__record--new  { color: var(--accent); }
+.agi-modal__record--prev { color: var(--text-muted); }
+
+.agi-modal__btn {
+  margin-top: var(--sp-md);
+  width: 100%;
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--surface2);
+  border: 1px solid var(--grid-line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-short) ease-out,
+              border-color var(--dur-short) ease-out;
+}
+
+.agi-modal__btn:hover {
+  background: var(--grid-line);
+  border-color: var(--text-dim);
+}

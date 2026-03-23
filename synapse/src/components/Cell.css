@@ -1,0 +1,78 @@
+/* Cell — 44×44px grid cell with halftone dot texture */
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: var(--surface);
+  border: 1px solid var(--grid-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  /* Halftone dot texture (PCB/graph paper) */
+  background-image: radial-gradient(
+    circle,
+    var(--grid-line) 1px,
+    transparent 1px
+  );
+  background-size: 8px 8px;
+  background-color: var(--surface);
+  transition: background-color var(--dur-short) ease-out;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cell:hover:not(.cell--occupied) {
+  background-color: var(--surface2);
+}
+
+/* Shake feedback for occupied cell click */
+@keyframes cellShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  60%       { transform: translateX(4px); }
+  80%       { transform: translateX(-2px); }
+}
+
+.cell--shake {
+  animation: cellShake var(--dur-short) ease-out;
+}
+
+/* Neuron — 36×36px circle */
+@keyframes neuronEnter {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes agiPulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(200, 240, 96, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(200, 240, 96, 0);   }
+}
+
+.neuron {
+  width: var(--neuron-size);
+  height: var(--neuron-size);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: neuronEnter var(--dur-short) ease-out both;
+  position: relative;
+  z-index: 1;
+}
+
+.neuron--agi {
+  animation: neuronEnter var(--dur-short) ease-out,
+             agiPulse 2s ease-in-out var(--dur-short) infinite;
+}
+
+.neuron__label {
+  font-family: var(--font-mono-tier);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--bg);
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: none;
+}

@@ -1,0 +1,16 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, var(--cell-size));
+  grid-template-rows: repeat(8, var(--cell-size));
+  width: var(--grid-width);
+  border: 1px solid var(--grid-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.grid--locked {
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity var(--dur-short) ease-out;
+}

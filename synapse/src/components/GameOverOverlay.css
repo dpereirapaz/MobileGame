@@ -1,0 +1,95 @@
+@keyframes gameoverEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.gameover {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 14, 10, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-md);
+  z-index: 200;
+  animation: gameoverEnter var(--dur-medium) ease-out both;
+}
+
+.gameover__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-sm);
+  width: 100%;
+  max-width: 320px;
+}
+
+.gameover__eyebrow {
+  font-family: var(--font-mono-tier);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.gameover__title {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 400;
+  color: var(--text);
+  margin: var(--sp-xs) 0 0;
+  line-height: 1.1;
+}
+
+.gameover__score {
+  font-family: var(--font-score);
+  font-size: 64px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  line-height: 1;
+  margin-top: var(--sp-md);
+}
+
+.gameover__flops {
+  font-size: 24px;
+  color: var(--text-muted);
+  margin-left: var(--sp-xs);
+}
+
+.gameover__best {
+  font-family: var(--font-score);
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  margin-top: var(--sp-xs);
+}
+
+.gameover__best--new  { color: var(--accent); }
+.gameover__best--prev { color: var(--text-muted); }
+
+.gameover__btn {
+  margin-top: var(--sp-xl);
+  width: 100%;
+  padding: var(--sp-md);
+  background: var(--surface2);
+  border: 1px solid var(--grid-line);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-short) ease-out,
+              border-color var(--dur-short) ease-out;
+}
+
+.gameover__btn:hover {
+  background: var(--grid-line);
+  border-color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+  .gameover__score { font-size: 48px; }
+  .gameover__best  { font-size: 18px; }
+}

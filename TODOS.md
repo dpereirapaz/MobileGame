@@ -29,3 +29,19 @@
 **Context:** The approved design doc (office-hours) explicitly lists "multi-piece tray (3 pieces per turn)" as the first post-validation backlog item. Candidate Phase 1 API: `GameState` gains a `tray: Piece[]` field; `placeFromTray(state, trayIndex, row, col): GameState` replaces `placeNeuron`. Phase 1 spec TBD post-prototype (design doc says "run /plan-eng-review at start of Phase 1").
 
 **Depends on:** Gate 0→1 (prototype validation). Run /office-hours for Phase 1 first.
+
+---
+
+## TODO-003 — Keyboard navigation for game board (Phase 1)
+
+**What:** Add keyboard navigation to the game grid: Tab/arrow keys to move between cells, Enter to place a neuron, Escape to deselect.
+
+**Why:** The target audience (tech/AI-curious, 25–40) appreciates keyboard-first interfaces. Without it, the game is mouse/touch only — a meaningful accessibility gap for a game that signals "precision and craft."
+
+**Pros:** Keyboard nav is table-stakes accessibility. It also enables speed-running and power user behavior, both of which signal game depth to a tech audience.
+
+**Cons:** ~2 hours of additional engineering. Complex for the prototype scope — requires focus management, ARIA combobox pattern, or custom keyboard handler. Not critical for validating the core merge mechanic.
+
+**Context:** Prototype uses basic `aria-gridcell` labels (per eng review spec) but no keyboard interaction. Phase 1 spec (React Native) will use a different interaction model (touch/gesture first), but web-app versions should support keyboard. Relevant WCAG standard: 2.1 Level AA, Criterion 2.1.1 (keyboard accessible).
+
+**Depends on:** Gate 0→1. Only implement if Phase 1 targets a web app (not React Native only).

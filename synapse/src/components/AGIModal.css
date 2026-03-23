@@ -6,7 +6,9 @@
 .agi-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 14, 10, 0.82);
+  background: rgba(15, 14, 10, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +18,7 @@
 
 .agi-modal {
   background: var(--surface);
-  border: 1px solid var(--grid-line);
+  border: 1px solid var(--accent-dim);
   border-radius: var(--radius-md);
   padding: var(--sp-2xl) var(--sp-xl);
   width: 100%;
@@ -26,6 +28,8 @@
   align-items: center;
   gap: var(--sp-sm);
   animation: modalEnter 300ms ease-out both;
+  box-shadow: 0 0 48px rgba(200, 240, 96, 0.10),
+              0 24px 48px rgba(0, 0, 0, 0.65);
 }
 
 .agi-modal__eyebrow {

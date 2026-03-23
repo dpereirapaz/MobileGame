@@ -40,7 +40,7 @@ export function Cell({ row, col, tier, isShaking, isLocked, onClick }: CellProps
       {tier !== null && (
         <div
           key={`${row}-${col}-${tier}`}
-          className={`neuron${tier === 7 ? ' neuron--agi' : ''}`}
+          className={`neuron tier-${tier}${tier === 7 ? ' neuron--agi' : ''}`}
           style={{ backgroundColor: TIER_COLORS[tier] }}
         >
           <span className="neuron__label">{TIER_LABELS[tier]}</span>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse — Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0F0E0A;
+    --surface:   #1C1A13;
+    --surface2:  #252218;
+    --grid-line: #2E2B1F;
+    --text:      #E8E0C8;
+    --text-muted:#9A9178;
+    --text-dim:  #5C5843;
+    --accent:    #C8F060;
+    --accent-dim:#8AAA3A;
+
+    /* Neuron type colors */
+    --n-language:   #4A9EBF;
+    --n-vision:     #7BAE7F;
+    --n-reasoning:  #C4956A;
+    --n-memory:     #7C4FA8;
+    --n-planning:   #5C8A8A;
+    --n-creativity: #D4875A;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans:  'Geist', system-ui, sans-serif;
+    --font-mono:  'JetBrains Mono', 'Courier New', monospace;
+    --font-data:  'DM Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 80px 0; border-bottom: 1px solid var(--grid-line); }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 120px 0 80px;
+    border-bottom: 1px solid var(--grid-line);
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+  .hero-compute {
+    font-family: var(--font-data);
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .hero-compute span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── TYPOGRAPHY SPECIMEN ── */
+  .type-row {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--grid-line);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .type-specimen-serif {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .type-specimen-mono {
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .type-specimen-data {
+    font-family: var(--font-data);
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .type-specimen-body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  /* ── COLOR PALETTE ── */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  .swatch {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--grid-line);
+  }
+  .swatch-color { height: 80px; }
+  .swatch-info {
+    padding: 12px;
+    background: var(--surface);
+  }
+  .swatch-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .swatch-hex {
+    font-family: var(--font-data);
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  /* ── GAME BOARD MOCKUP ── */
+  .game-mockup {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 480px;
+  }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .game-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .compute-display {
+    text-align: right;
+  }
+  .compute-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: block;
+  }
+  .compute-value {
+    font-family: var(--font-data);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .grid-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    background: var(--grid-line);
+    border: 1px solid var(--grid-line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .cell {
+    aspect-ratio: 1;
+    background: var(--bg);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Subtle halftone dot — PCB / graph paper texture */
+    background-image: radial-gradient(circle, var(--grid-line) 1px, transparent 1px);
+    background-size: 6px 6px;
+    background-position: center;
+  }
+  .neuron {
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    position: relative;
+    background: var(--bg);
+  }
+  .n-p  { border-color: var(--n-language);   color: var(--n-language); }
+  .n-ll { border-color: var(--n-vision);     color: var(--n-vision); }
+  .n-hl { border-color: var(--n-reasoning);  color: var(--n-reasoning); }
+  .n-ah { border-color: var(--n-memory);     color: var(--n-memory); border-width: 2.5px; }
+  .n-tb { border-color: var(--n-planning);   color: var(--n-planning); border-width: 3px; }
+  .n-fm { border-color: var(--n-creativity); color: var(--n-creativity); border-width: 3px; box-shadow: 0 0 8px var(--n-creativity)44; }
+  .n-agi { border-color: var(--accent); color: var(--accent); border-width: 3px; box-shadow: 0 0 12px var(--accent)66; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 8px var(--accent)44; }
+    50%       { box-shadow: 0 0 20px var(--accent)88; }
+  }
+
+  .tier-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tier-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg);
+    border: 1px solid var(--grid-line);
+    border-radius: 999px;
+  }
+  .tier-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    flex-shrink: 0;
+  }
+  .tier-chip-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── UI COMPONENTS ── */
+  .component-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--grid-line);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border-color: transparent;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    border-radius: var(--radius-md);
+    padding: 24px;
+  }
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-family: var(--font-data);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .card-sub {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .merge-event {
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 320px;
+  }
+  .merge-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .merge-text { flex: 1; }
+  .merge-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .merge-sub {
+    font-family: var(--font-data);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* ── GAME OVER SCREEN ── */
+  .game-over {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    border-radius: var(--radius-lg);
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 380px;
+  }
+  .game-over-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .game-over-compute {
+    font-family: var(--font-data);
+    font-size: 64px;
+    font-weight: 500;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .game-over-unit {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .game-over-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .stat-item {}
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .stat-value {
+    font-family: var(--font-data);
+    font-size: 18px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .game-over-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── MODE SELECT ── */
+  .mode-card {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .mode-card:hover, .mode-card.active { border-color: var(--accent); }
+  .mode-card.active .mode-name { color: var(--accent); }
+  .mode-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .mode-desc {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--grid-line); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="container">
+  <div class="hero">
+    <div class="hero-eyebrow">Design System Preview — Synapse v0.1</div>
+    <h1 class="hero-title">Build the<br><em>mind</em> that<br>matters.</h1>
+    <p class="hero-subtitle">Place neurons. Fire synapses. Reach AGI. Become the top frontier lab in the world.</p>
+    <div class="hero-compute">LAB RECORD &nbsp;—&nbsp; <span>12,480 FLOPs</span> &nbsp;·&nbsp; HIGHEST TIER &nbsp;—&nbsp; <span>FOUNDATION MODEL</span></div>
+  </div>
+</div>
+
+<!-- TYPOGRAPHY -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">01 — Typography</div>
+
+    <div class="type-row">
+      <div class="type-meta">Instrument Serif — Display / Hero</div>
+      <div class="type-specimen-serif">Neural networks learn<br><em>what they cannot articulate.</em></div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">JetBrains Mono — Tier Names / Labels</div>
+      <div class="type-specimen-mono">PERCEPTRON → AGI</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">DM Mono — Compute / Scores</div>
+      <div class="type-specimen-data">14,820 FLOPs &nbsp;↑&nbsp; +270</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">Geist — Body / UI</div>
+      <div class="type-specimen-body">Three neurons connected. Something shifts. The hidden layer doesn't know why it works — it just does. This is how intelligence begins: not with understanding, but with pattern.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COLOR PALETTE -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">02 — Color</div>
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0F0E0A;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Background</span>
+          <span class="swatch-hex">#0F0E0A</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1C1A13;border-bottom:1px solid #2E2B1F;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Surface</span>
+          <span class="swatch-hex">#1C1A13</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E8E0C8;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Text</span>
+          <span class="swatch-hex">#E8E0C8</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C8F060;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Accent</span>
+          <span class="swatch-hex">#C8F060</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4A9EBF;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Language</span>
+          <span class="swatch-hex">#4A9EBF</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7BAE7F;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Vision</span>
+          <span class="swatch-hex">#7BAE7F</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C4956A;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Reasoning</span>
+          <span class="swatch-hex">#C4956A</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7C4FA8;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Memory</span>
+          <span class="swatch-hex">#7C4FA8</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#5C8A8A;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Planning</span>
+          <span class="swatch-hex">#5C8A8A</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#D4875A;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Creativity</span>
+          <span class="swatch-hex">#D4875A</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME BOARD MOCKUP -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">03 — Game Board</div>
+    <div class="grid-2" style="align-items: start;">
+      <div class="game-mockup">
+        <div class="game-header">
+          <div class="game-title">Synapse</div>
+          <div class="compute-display">
+            <span class="compute-label">Compute</span>
+            <span class="compute-value">4,230</span>
+          </div>
+        </div>
+        <div class="grid-board">
+          <!-- Row 1 -->
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-hl">HL</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <!-- Row 2 -->
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ah">AH</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <!-- Row 3 -->
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-tb">TB</div></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-hl">HL</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <!-- Row 4 -->
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-fm">FM</div></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <!-- Row 5 -->
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-agi">AGI</div></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-hl">HL</div></div>
+          <!-- Row 6 -->
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ah">AH</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <!-- Row 7 -->
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ah">AH</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <!-- Row 8 -->
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"><div class="neuron n-p">P</div></div>
+          <div class="cell"></div>
+          <div class="cell"><div class="neuron n-ll">LL</div></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+        </div>
+        <div class="tier-legend">
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-language)"></div><span class="tier-chip-label">P</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-vision)"></div><span class="tier-chip-label">LL</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-reasoning)"></div><span class="tier-chip-label">HL</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-memory)"></div><span class="tier-chip-label">AH</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-planning)"></div><span class="tier-chip-label">TB</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--n-creativity)"></div><span class="tier-chip-label">FM</span></div>
+          <div class="tier-chip"><div class="tier-dot" style="border-color:var(--accent)"></div><span class="tier-chip-label" style="color:var(--accent)">AGI</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <!-- Stat cards -->
+        <div class="grid-2" style="gap:12px;">
+          <div class="card">
+            <div class="card-title">Compute</div>
+            <div class="card-value">4,230</div>
+            <div class="card-sub">FLOPs this run</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Lab Record</div>
+            <div class="card-value">12,480</div>
+            <div class="card-sub">Personal best</div>
+          </div>
+        </div>
+
+        <!-- Merge event notification -->
+        <div class="merge-event">
+          <div class="merge-icon">AGI</div>
+          <div class="merge-text">
+            <span class="merge-title">AGI Achieved</span>
+            <span class="merge-sub">+500 FLOPs · Your lab reached general intelligence</span>
+          </div>
+        </div>
+
+        <!-- Mode selector -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="mode-card active">
+            <div class="mode-name">Zen Mode</div>
+            <div class="mode-desc">Endless training. No timer. Personal best.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-name">Daily Run</div>
+            <div class="mode-desc">Same seed globally. One attempt. Shareable.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-name">Sprint</div>
+            <div class="mode-desc">3 minutes. Urgency changes everything.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPONENTS -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">04 — Components</div>
+
+    <div style="margin-bottom:24px;">
+      <div class="type-meta" style="margin-bottom:16px;">Buttons</div>
+      <div class="component-row">
+        <button class="btn btn-primary">New Training Run</button>
+        <button class="btn btn-secondary">Share Result</button>
+        <button class="btn btn-ghost">Settings</button>
+      </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="type-meta" style="margin-bottom:16px;">Game Over Screen</div>
+    <div class="game-over">
+      <div class="game-over-label">Training Run Complete</div>
+      <div class="game-over-compute">7,840</div>
+      <div class="game-over-unit">FLOPs Computed</div>
+      <div class="game-over-stats">
+        <div class="stat-item">
+          <span class="stat-label">Neurons Merged</span>
+          <span class="stat-value">142</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Highest Tier</span>
+          <span class="stat-value" style="font-family:var(--font-mono);font-size:12px;color:var(--n-creativity);text-transform:uppercase;letter-spacing:0.05em;">Found. Model</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Longest Chain</span>
+          <span class="stat-value">×4</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Lab Record</span>
+          <span class="stat-value" style="color:var(--accent)">12,480</span>
+        </div>
+      </div>
+      <div class="game-over-actions">
+        <button class="btn btn-primary" style="width:100%;">New Training Run</button>
+        <button class="btn btn-secondary" style="width:100%;">Share Result</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:80px;"></div>
+
+</body>
+</html>

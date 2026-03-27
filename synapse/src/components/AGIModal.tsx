@@ -5,9 +5,10 @@ interface AGIModalProps {
   personalBest: number;
   isNewRecord: boolean;
   onClose: () => void;
+  onNewGame: () => void;
 }
 
-export function AGIModal({ compute, personalBest, isNewRecord, onClose }: AGIModalProps) {
+export function AGIModal({ compute, personalBest, isNewRecord, onClose, onNewGame }: AGIModalProps) {
   return (
     <div className="agi-modal-backdrop" onClick={onClose}>
       <div className="agi-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="AGI achieved">
@@ -22,7 +23,10 @@ export function AGIModal({ compute, personalBest, isNewRecord, onClose }: AGIMod
             <span className="agi-modal__record--prev">was {personalBest.toLocaleString()}</span>
           )}
         </div>
-        <button className="agi-modal__btn" onClick={onClose}>
+        <button className="agi-modal__btn agi-modal__btn--new-run" onClick={onNewGame}>
+          New Training Run
+        </button>
+        <button className="agi-modal__btn agi-modal__btn--continue" onClick={onClose}>
           Continue
         </button>
       </div>

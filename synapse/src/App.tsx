@@ -1,14 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   createGame,
   placeNeuronWithSteps,
   isGameOver,
+  GRID_SIZE,
+  MAX_TIER,
   type GameState,
 } from './game/engine';
 import { Grid } from './components/Grid';
 import { ScoreBar } from './components/ScoreBar';
 import { AGIModal } from './components/AGIModal';
 import { GameOverOverlay } from './components/GameOverOverlay';
+import { TierChain } from './components/TierChain';
 import './App.css';
 
 // ─── localStorage helpers (all access in try/catch per spec) ───────
@@ -33,9 +36,9 @@ function hasNewAGI(
   before: (number | null)[][],
   after: (number | null)[][],
 ): boolean {
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
-      if (before[r][c] !== 7 && after[r][c] === 7) return true;
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (before[r][c] !== MAX_TIER && after[r][c] === MAX_TIER) return true;
     }
   }
   return false;
@@ -71,6 +74,40 @@ export function App() {
   const isAnimating = animState.queue.length > 0;
   const displayGrid = isAnimating ? animState.queue[0] : gameState.grid;
 
+  // Which cells will be consumed in the NEXT merge step (lookahead visual)
+  const mergingCells = useMemo((): Set<string> => {
+    if (animState.queue.length < 2) return new Set();
+    const current = animState.queue[0];
+    const next = animState.queue[1];
+    const merging = new Set<string>();
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        if (current[r][c] !== null && next[r][c] === null) {
+          merging.add(`${r}-${c}`);
+        }
+      }
+    }
+    return merging;
+  }, [animState.queue]);
+
+  // Which cells receive a merged/upgraded neuron in the NEXT step
+  const mergeTargetCells = useMemo((): Set<string> => {
+    if (animState.queue.length < 2) return new Set();
+    const current = animState.queue[0];
+    const next = animState.queue[1];
+    const targets = new Set<string>();
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const prevTier = current[r][c];
+        const nextTier = next[r][c];
+        if (nextTier !== null && (prevTier === null || nextTier > prevTier)) {
+          targets.add(`${r}-${c}`);
+        }
+      }
+    }
+    return targets;
+  }, [animState.queue]);
+
   // Advance animation queue at 1.2s per step (DESIGN.md merge duration)
   useEffect(() => {
     if (animState.queue.length === 0) return;
@@ -83,20 +120,10 @@ export function App() {
     return () => clearTimeout(timer);
   }, [animState.queue.length]);
 
-  // When queue empties: fire post-animation effects (AGI modal, game-over)
-  useEffect(() => {
-    if (animState.queue.length > 0) return;
-    const final = pendingRef.current;
-    if (!final) return;
-    pendingRef.current = null;
-    triggerPostEffects(final, preClickGridRef.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animState.queue.length]);
-
-  function triggerPostEffects(
+  const triggerPostEffects = useCallback((
     final: GameState,
     preGrid: (number | null)[][],
-  ) {
+  ) => {
     if (hasNewAGI(preGrid, final.grid)) {
       setShowAGIModal(true);
     }
@@ -104,7 +131,16 @@ export function App() {
       setGameOver(true);
       savePersonalBest(final.personalBest);
     }
-  }
+  }, []); // setShowAGIModal + setGameOver are stable; savePersonalBest is module-level
+
+  // When queue empties: fire post-animation effects (AGI modal, game-over)
+  useEffect(() => {
+    if (animState.queue.length > 0) return;
+    const final = pendingRef.current;
+    if (!final) return;
+    pendingRef.current = null;
+    triggerPostEffects(final, preClickGridRef.current);
+  }, [animState.queue.length, triggerPostEffects]);
 
   function handleCellClick(row: number, col: number) {
     if (showAGIModal || gameOver) return;
@@ -146,7 +182,7 @@ export function App() {
     }
   }
 
-  function handleNewGame() {
+  const handleNewGame = useCallback(() => {
     savePersonalBest(gameState.personalBest);
     const pb = readPersonalBest();
     const fresh = createGame(pb);
@@ -156,7 +192,7 @@ export function App() {
     setGameOver(false);
     preClickGridRef.current = fresh.grid;
     pendingRef.current = null;
-  }
+  }, [gameState.personalBest]);
 
   const isNewRecord = gameState.compute > 0 && gameState.compute >= gameState.personalBest;
 
@@ -170,12 +206,14 @@ export function App() {
         }
       }}
     >
-      <ScoreBar compute={gameState.compute} personalBest={gameState.personalBest} />
+      <ScoreBar compute={gameState.compute} personalBest={gameState.personalBest} onNewGame={handleNewGame} />
 
       <Grid
         grid={displayGrid}
         isLocked={isAnimating}
         shakingCell={shakingCell}
+        mergingCells={mergingCells}
+        mergeTargetCells={mergeTargetCells}
         onCellClick={handleCellClick}
       />
 
@@ -187,12 +225,15 @@ export function App() {
             : 'place a neuron — 3 adjacent same-tier neurons merge'}
       </footer>
 
+      <TierChain />
+
       {showAGIModal && (
         <AGIModal
           compute={gameState.compute}
           personalBest={gameState.personalBest}
           isNewRecord={isNewRecord}
           onClose={() => setShowAGIModal(false)}
+          onNewGame={handleNewGame}
         />
       )}
 

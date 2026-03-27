@@ -18,8 +18,8 @@ export interface PlaceResult {
   steps: MergeStep[];               // one entry per merge pass (empty = no merges)
 }
 
-const GRID_SIZE = 8;
-const MAX_TIER = 7;
+export const GRID_SIZE = 8;
+export const MAX_TIER = 7;
 const AGI_BONUS = 500;
 const DIRS: [number, number][] = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 

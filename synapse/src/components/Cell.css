@@ -26,18 +26,22 @@
   background-color: var(--surface2);
 }
 
-/* Hover indicator dot for empty cells */
+.cell:active:not(.cell--occupied) {
+  background-color: var(--surface2);
+}
+
+/* Hover indicator ring for empty cells */
 .cell:not(.cell--occupied)::after {
   content: '';
   position: absolute;
-  width: 5px;
-  height: 5px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--text-dim);
+  border: 1.5px solid var(--text-dim);
   opacity: 0;
   transition: opacity var(--dur-short) ease-out,
               transform var(--dur-short) ease-out;
-  transform: scale(0.6);
+  transform: scale(0.65);
 }
 
 .cell:hover:not(.cell--occupied)::after {
@@ -70,6 +74,44 @@
                          0 0 20px  rgba(200, 240, 96, 0.5); }
   50%       { box-shadow: 0 0 0 6px rgba(200, 240, 96, 0),
                          0 0 32px  rgba(200, 240, 96, 0.2); }
+}
+
+@keyframes mergeConsume {
+  0%   {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(200, 240, 96, 0);
+  }
+  30%  {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 3px rgba(200, 240, 96, 0.55);
+  }
+  65%  {
+    transform: scale(0.72);
+    opacity: 0.8;
+    box-shadow: 0 0 0 1px rgba(200, 240, 96, 0.3);
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes mergeTargetBurst {
+  0%   {
+    box-shadow: inherit;
+  }
+  25%  {
+    box-shadow: 0 0 0 8px rgba(200, 240, 96, 0.45),
+                0 0 28px rgba(200, 240, 96, 0.6);
+  }
+  60%  {
+    box-shadow: 0 0 0 4px rgba(200, 240, 96, 0.2),
+                0 0 18px rgba(200, 240, 96, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 24px rgba(200, 240, 96, 0.75);
+  }
 }
 
 .neuron {
@@ -136,6 +178,15 @@
              agiPulse 2s ease-in-out 220ms infinite;
 }
 
+.cell--merging .neuron {
+  animation: mergeConsume var(--dur-merge) ease-in-out forwards;
+}
+
+.cell--merge-target .neuron {
+  animation: neuronEnter 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
+             mergeTargetBurst 600ms ease-out 220ms both;
+}
+
 .neuron__label {
   font-family: var(--font-mono-tier);
   font-size: 8px;
@@ -147,4 +198,12 @@
   pointer-events: none;
   position: relative;
   z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neuron, .neuron--agi, .cell--merging .neuron, .cell--merge-target .neuron {
+    animation: none !important;
+    transition: none !important;
+  }
+  .cell, .cell::after { transition: none !important; }
 }

@@ -6,7 +6,7 @@
 .agi-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 14, 10, 0.75);
+  background: rgba(15, 14, 10, 0.80);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -28,7 +28,8 @@
   align-items: center;
   gap: var(--sp-sm);
   animation: modalEnter 300ms ease-out both;
-  box-shadow: 0 0 48px rgba(200, 240, 96, 0.10),
+  box-shadow: 0 0 64px rgba(200, 240, 96, 0.15),
+              0 0 0 1px rgba(200, 240, 96, 0.15),
               0 24px 48px rgba(0, 0, 0, 0.65);
 }
 
@@ -82,22 +83,44 @@
 .agi-modal__record--prev { color: var(--text-muted); }
 
 .agi-modal__btn {
-  margin-top: var(--sp-md);
+  margin-top: var(--sp-sm);
   width: 100%;
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--surface2);
-  border: 1px solid var(--grid-line);
+  /* 14px vertical padding + 16px line-height = 44px — Apple HIG minimum */
+  padding: 14px var(--sp-md);
   border-radius: var(--radius-sm);
-  color: var(--text);
   font-family: var(--font-ui);
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: background var(--dur-short) ease-out,
-              border-color var(--dur-short) ease-out;
+              border-color var(--dur-short) ease-out,
+              color var(--dur-short) ease-out;
 }
 
-.agi-modal__btn:hover {
+.agi-modal__btn--new-run {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--bg);
+}
+
+.agi-modal__btn--new-run:hover {
+  background: #d4f870;
+  border-color: #d4f870;
+}
+
+.agi-modal__btn--continue {
+  background: var(--surface2);
+  border: 1px solid var(--grid-line);
+  color: var(--text-muted);
+}
+
+.agi-modal__btn--continue:hover {
   background: var(--grid-line);
   border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.agi-modal__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

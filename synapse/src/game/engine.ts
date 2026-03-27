@@ -1,26 +1,32 @@
 // Synapse — pure game engine (zero DOM/React dependencies)
 // Reusable in Phase 1 React Native build.
 
+/** A single cell value — null is empty, 1–7 is a neuron tier. */
+export type CellValue = number | null;
+
+/** The 8×8 game board. */
+export type BoardGrid = CellValue[][];
+
 export interface GameState {
-  grid: (number | null)[][];  // null = empty, 1–7 = neuron tier
-  compute: number;            // accumulated FLOPs score
-  personalBest: number;       // set by React layer from localStorage
+  grid: BoardGrid;
+  compute: number;     // accumulated FLOPs score
+  personalBest: number; // set by React layer from localStorage
 }
 
 export interface MergeStep {
-  grid: (number | null)[][];
+  grid: BoardGrid;
   pointsEarned: number;
 }
 
 export interface PlaceResult {
   finalState: GameState;
-  placedGrid: (number | null)[][];  // grid after placement, before any merges
-  steps: MergeStep[];               // one entry per merge pass (empty = no merges)
+  placedGrid: BoardGrid;  // grid after placement, before any merges
+  steps: MergeStep[];     // one entry per merge pass (empty = no merges)
 }
 
 export const GRID_SIZE = 8;
 export const MAX_TIER = 7;
-const AGI_BONUS = 500;
+export const AGI_BONUS = 500;
 const DIRS: [number, number][] = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
 // ─── Public API ───────────────────────────────────────────────────

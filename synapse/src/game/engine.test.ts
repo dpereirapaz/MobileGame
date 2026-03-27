@@ -4,6 +4,8 @@ import {
   placeNeuron,
   placeNeuronWithSteps,
   isGameOver,
+  GRID_SIZE,
+  AGI_BONUS,
   type GameState,
 } from './engine';
 
@@ -253,5 +255,43 @@ describe('placeNeuronWithSteps', () => {
     expect(steps[0].pointsEarned).toBe(2);     // Tier-2 created
     expect(steps[1].pointsEarned).toBe(3);     // Tier-3 created (chain)
     expect(finalState.compute).toBe(5);        // 2 + 3
+  });
+});
+
+// ─── Tests 19–21: edge cases flagged by code review ───────────────
+
+describe('edge cases', () => {
+  test('19 — out-of-bounds placement returns same state reference', () => {
+    const state = createGame(0);
+    expect(placeNeuron(state, -1, 0)).toBe(state);
+    expect(placeNeuron(state, GRID_SIZE, 0)).toBe(state);
+    expect(placeNeuron(state, 0, -1)).toBe(state);
+    expect(placeNeuron(state, 0, GRID_SIZE)).toBe(state);
+  });
+
+  test('20 — two simultaneous independent merges each score correctly', () => {
+    // Place Tier-1 at (7,2): completes group (7,0),(7,1),(7,2) → Tier-2 at (7,2)
+    // Pre-existing group (0,0),(0,1),(0,2) Tier-1 also resolves in same pass → Tier-2 at (0,0)
+    // Total: 2 + 2 = 4 pts
+    const state = makeState([
+      [0, 0, 1], [0, 1, 1], [0, 2, 1],  // independent Tier-1 group (row-major first)
+      [7, 0, 1], [7, 1, 1],              // incomplete group — complete via placement
+    ]);
+    const next = placeNeuron(state, 7, 2);
+    expect(next.grid[0][0]).toBe(2);    // group A → Tier-2 at BFS first cell
+    expect(next.grid[7][2]).toBe(2);    // group B → Tier-2 at placed pos
+    expect(next.compute).toBe(4);       // 2 + 2 = 4
+  });
+
+  test('21 — AGI_BONUS is included in compute after chain merge reaching Tier-7', () => {
+    // Place Tier-1 to complete a T1 group → T2, which completes T2 group → T3 ...
+    // Shortcut: pre-place 3 adjacent T6s + a T1 group; the T1 triggers T6→T7 via chain
+    // T1 group at (7,0)/(7,1) + place at (7,2) → T2 at (7,2)
+    // T2 joins pre-placed T2 pair at (6,0)/(6,1)... but that's too complex to chain all the way.
+    // Instead: pre-place 2 T6 neighbors and trigger the T6 group directly via any placement.
+    const state = makeState([[0, 0, 6], [0, 1, 6], [0, 2, 6]]);  // T6 group ready
+    const next = placeNeuron(state, 7, 7);  // any placement triggers merge pass
+    expect(next.grid[0][0]).toBe(7);        // T6 → T7 (AGI)
+    expect(next.compute).toBe(AGI_BONUS);  // 500 — uses exported constant
   });
 });

@@ -52,7 +52,7 @@
   /* Grid dimensions */
   --cell-size:   44px;
   --neuron-size: 36px;
-  --grid-width:  352px;  /* 8 × 44px */
+  --grid-width:  min(352px, calc(100vw - 16px));  /* 8 × 44px, clamps on <375px screens */
 
   /* Animation durations */
   --dur-micro:  75ms;

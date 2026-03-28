@@ -194,7 +194,14 @@ export function App() {
     pendingRef.current = null;
   }, [gameState.personalBest]);
 
-  const isNewRecord = gameState.compute > 0 && gameState.compute >= gameState.personalBest;
+  const isNewRecord = gameState.compute > 0 && gameState.compute > gameState.personalBest;
+
+  // Persist personalBest whenever it increases (not just on game-over)
+  useEffect(() => {
+    if (gameState.personalBest > 0) {
+      savePersonalBest(gameState.personalBest);
+    }
+  }, [gameState.personalBest]);
 
   return (
     <div

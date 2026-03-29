@@ -1,0 +1,62 @@
+/* LayerHeader — label strip above each 4×4 layer grid */
+
+.layer-header {
+  width: var(--layer-grid-width);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2xs);
+  padding-bottom: var(--sp-xs);
+  /* Height expands to fit content — no fixed height, no overflow: hidden */
+}
+
+.layer-header__name {
+  font-family: var(--font-mono-tier);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  line-height: 1.2;
+  transition: color var(--dur-short) ease-out;
+}
+
+.layer-header--active .layer-header__name {
+  color: var(--text-muted);
+}
+
+.layer-header--connected .layer-header__name,
+.layer-header--solved .layer-header__name {
+  color: var(--accent-dim);
+}
+
+.layer-header__status {
+  font-family: var(--font-mono-tier);
+  font-size: 7px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--text-dim);
+  transition: color var(--dur-short) ease-out;
+}
+
+/* Active layer — goal label highlighted */
+.layer-header__status--active {
+  color: var(--accent);
+}
+
+/* Solved */
+.layer-header__status--solved {
+  color: var(--accent-dim);
+}
+
+/* Connected — muted success */
+.layer-header__status--connected {
+  color: var(--success);
+}
+
+/* Locked */
+.layer-header__status--locked {
+  color: var(--text-dim);
+}

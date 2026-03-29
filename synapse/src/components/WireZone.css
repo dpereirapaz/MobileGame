@@ -1,0 +1,37 @@
+/* WireZone — SVG connector strip between two layer grids */
+
+.wire-zone {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wire-zone__svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.wire-zone__wire {
+  stroke: var(--accent-dim);
+  opacity: 0.6;
+  transition: stroke var(--dur-short) ease-out,
+              opacity var(--dur-short) ease-out;
+}
+
+.wire-zone__wire:hover {
+  opacity: 1;
+  stroke: var(--accent);
+}
+
+/* Activate button centred in the wire zone */
+.wire-zone__activate {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}

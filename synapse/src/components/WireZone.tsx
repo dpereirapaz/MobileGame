@@ -1,8 +1,5 @@
-// WireZone — SVG connector area displayed between two layer grids.
-// Renders drawn connections as arced lines from source column to target column.
-// Wire coords: fromCol → x1, toCol → x2, y1=0, y2=40 (var(--wire-zone-height)).
-//
-// Also hosts the ActivateButton when phase === 'activate' and this zone is active.
+// WireZone — SVG connection area between two adjacent layer grids.
+// Wire coords: fromCol → x1 (y=0), toCol → x2 (y=WIRE_HEIGHT).
 
 import { memo } from 'react';
 import type { Connection, GameState } from '../game/engine-v2';
@@ -10,43 +7,44 @@ import { LAYER_SIZE } from '../game/engine-v2';
 import { ActivateButton } from './ActivateButton';
 import './WireZone.css';
 
-const CELL_SIZE = 44; // matches --layer-cell-size
-const WIRE_HEIGHT = 40; // matches --wire-zone-height
-const TOTAL_WIDTH = LAYER_SIZE * CELL_SIZE; // 176px
+const CELL_SIZE = 44;
+const WIRE_HEIGHT = 40;
+const TOTAL_WIDTH = LAYER_SIZE * CELL_SIZE; // 176
 
-/** Map a column index to the horizontal centre of that cell. */
 function colToX(col: number): number {
   return col * CELL_SIZE + CELL_SIZE / 2;
 }
 
 export interface WireZoneProps {
-  /** Connections that cross this wire zone (fromLayer === zoneFromLayer). */
   connections: Connection[];
-  /** Index of the "from" layer (0 = Input→Hidden, 1 = Hidden→Output). */
   zoneFromLayer: number;
   phase: GameState['phase'];
-  /** canActivate: true when MIN_CONNECTIONS satisfied and phase is 'activate'. */
+  activeLayer: number;
   canActivate: boolean;
   onActivate: () => void;
+  onUndo: () => void;
+  connectionCount: number;
+  minConnections: number;
 }
 
 export const WireZone = memo(function WireZone({
   connections,
   zoneFromLayer,
   phase,
+  activeLayer,
   canActivate,
   onActivate,
+  onUndo,
+  connectionCount,
+  minConnections,
 }: WireZoneProps) {
-  // Only show wires for this zone's connections
-  const zoneConns = connections.filter(
-    c => c.fromLayer === zoneFromLayer,
-  );
+  const zoneConns = connections.filter(c => c.fromLayer === zoneFromLayer);
 
-  const showActivateButton =
-    phase === 'activate' && canActivate;
+  // Show activate UI when this zone's layer is the active connect-phase source
+  const isActiveZone = phase === 'connect' && activeLayer === zoneFromLayer;
 
   return (
-    <div className="wire-zone" style={{ width: TOTAL_WIDTH, height: WIRE_HEIGHT }}>
+    <div className="wire-zone" style={{ width: TOTAL_WIDTH }}>
       <svg
         className="wire-zone__svg"
         width={TOTAL_WIDTH}
@@ -57,13 +55,8 @@ export const WireZone = memo(function WireZone({
         {zoneConns.map((conn, i) => {
           const x1 = colToX(conn.fromCol);
           const x2 = colToX(conn.toCol);
-          const y1 = 0;
-          const y2 = WIRE_HEIGHT;
-
-          // Cubic bezier: control points pull toward centre vertically
           const midY = WIRE_HEIGHT / 2;
-          const d = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
-
+          const d = `M ${x1} 0 C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${WIRE_HEIGHT}`;
           return (
             <path
               key={i}
@@ -76,9 +69,20 @@ export const WireZone = memo(function WireZone({
         })}
       </svg>
 
-      {showActivateButton && (
-        <div className="wire-zone__activate">
-          <ActivateButton onClick={onActivate} />
+      {isActiveZone && (
+        <div className="wire-zone__controls">
+          {!canActivate ? (
+            <span className="wire-zone__count">
+              CONNECTIONS: {connectionCount} / {minConnections}
+            </span>
+          ) : (
+            <ActivateButton onClick={onActivate} />
+          )}
+          {connectionCount > 0 && (
+            <button className="wire-zone__undo" onClick={onUndo}>
+              UNDO
+            </button>
+          )}
         </div>
       )}
     </div>

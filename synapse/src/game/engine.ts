@@ -1,6 +1,9 @@
 // Synapse — pure game engine (zero DOM/React dependencies)
 // Reusable in Phase 1 React Native build.
 
+// BFS helpers live in bfs.ts so engine-v2.ts can share them.
+import { findGroups, applyGroups, GRID_SIZE, MAX_TIER, AGI_BONUS } from './bfs';
+
 /** A single cell value — null is empty, 1–7 is a neuron tier. */
 export type CellValue = number | null;
 
@@ -24,10 +27,7 @@ export interface PlaceResult {
   steps: MergeStep[];     // one entry per merge pass (empty = no merges)
 }
 
-export const GRID_SIZE = 8;
-export const MAX_TIER = 7;
-export const AGI_BONUS = 500;
-const DIRS: [number, number][] = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+export { GRID_SIZE, MAX_TIER, AGI_BONUS };
 
 // ─── Public API ───────────────────────────────────────────────────
 
@@ -146,110 +146,4 @@ export function isGameOver(state: GameState): boolean {
 
 function emptyGrid(): (number | null)[][] {
   return Array.from({ length: GRID_SIZE }, () => Array<number | null>(GRID_SIZE).fill(null));
-}
-
-interface Group {
-  cells: { row: number; col: number }[];
-  tier: number;
-}
-
-/**
- * BFS in row-major order (top-to-bottom, left-to-right).
- * Finds all contiguous groups of 3+ same-tier neurons, excluding tier 7.
- * Each cell belongs to exactly one group.
- */
-function findGroups(grid: (number | null)[][]): Group[] {
-  const visited: boolean[][] = Array.from({ length: GRID_SIZE }, () =>
-    Array(GRID_SIZE).fill(false),
-  );
-  const groups: Group[] = [];
-
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      const tier = grid[r][c];
-      // Skip: empty, already visited, or AGI (tier 7 never merges)
-      if (tier === null || visited[r][c] || tier === MAX_TIER) continue;
-
-      const cells: { row: number; col: number }[] = [];
-      const queue: [number, number][] = [[r, c]];
-      visited[r][c] = true;
-
-      while (queue.length > 0) {
-        const [cr, cc] = queue.shift()!;
-        cells.push({ row: cr, col: cc });
-
-        for (const [dr, dc] of DIRS) {
-          const nr = cr + dr;
-          const nc = cc + dc;
-          if (
-            nr >= 0 && nr < GRID_SIZE &&
-            nc >= 0 && nc < GRID_SIZE &&
-            !visited[nr][nc] &&
-            grid[nr][nc] === tier
-          ) {
-            visited[nr][nc] = true;
-            queue.push([nr, nc]);
-          }
-        }
-      }
-
-      if (cells.length >= 3) {
-        groups.push({ cells, tier });
-      }
-    }
-  }
-
-  return groups;
-}
-
-/**
- * Apply all groups simultaneously (groups are disjoint by construction).
- *
- * Upgrade position rules:
- * - If placedPos is in the group → upgrade lands at placedPos.
- * - Otherwise → upgrade lands at cells[0] (first cell in BFS / row-major order).
- *
- * Scoring:
- * - Each merge awards tier_output points (the tier of the newly created neuron).
- * - Exception: AGI (tier 7) creation awards +500 (override).
- */
-function applyGroups(
-  grid: (number | null)[][],
-  groups: Group[],
-  placedPos: { row: number; col: number } | null,
-): { newGrid: (number | null)[][]; points: number } {
-  const newGrid = grid.map(r => [...r]);
-  let points = 0;
-
-  for (const group of groups) {
-    // Remove all cells in the group
-    for (const { row, col } of group.cells) {
-      newGrid[row][col] = null;
-    }
-
-    const newTier = group.tier + 1;
-
-    // Determine upgrade position
-    let targetRow: number;
-    let targetCol: number;
-
-    if (
-      placedPos !== null &&
-      group.cells.some(c => c.row === placedPos.row && c.col === placedPos.col)
-    ) {
-      targetRow = placedPos.row;
-      targetCol = placedPos.col;
-    } else {
-      // First cell in BFS (row-major order)
-      targetRow = group.cells[0].row;
-      targetCol = group.cells[0].col;
-    }
-
-    newGrid[targetRow][targetCol] = newTier;
-
-    // Score: AGI override or tier value
-    points += newTier === MAX_TIER ? AGI_BONUS : newTier;
-  }
-
-  return { newGrid, points };
 }

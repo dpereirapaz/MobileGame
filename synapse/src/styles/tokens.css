@@ -49,10 +49,16 @@
   --radius-lg:   12px;
   --radius-full: 9999px;
 
-  /* Grid dimensions */
+  /* Grid dimensions — legacy 8×8 */
   --cell-size:   44px;
   --neuron-size: 36px;
   --grid-width:  min(352px, calc(100vw - 16px));  /* 8 × 44px, clamps on <375px screens */
+
+  /* Multi-layer board: 4×4 per layer, 176px wide (4 × 44px) */
+  --layer-cell-size:   44px;
+  --layer-neuron-size: 36px;
+  --layer-grid-width:  176px;  /* 4 × 44px */
+  --wire-zone-height:  40px;
 
   /* Animation durations */
   --dur-micro:  75ms;

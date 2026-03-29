@@ -261,7 +261,7 @@ export function placeNeuronWithSteps(
   // Special path: Output layer solved → immediate win.
   // For other layers solved → Connection Phase.
   // Solved takes priority over game-over.
-  let newPhase = state.phase;
+  let newPhase: GameState['phase'] = state.phase;
 
   if (activeIdx === 2 && isLayerSolved(updatedLayer)) {
     // Output solved → won
